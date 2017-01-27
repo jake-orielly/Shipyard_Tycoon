@@ -47,23 +47,32 @@
         border: 1px solid #ccc;
         border-top: none;
     }
+    
+    #smeltBackground {
+        position: relative;
+        width: 60px;
+        height: 30px;
+        background-color: #ddd;
+    }
 
-    .topright {
-        float: right;
-        cursor: pointer;
-        font-size: 20px;
+    #smeltBar {
+        position: absolute;
+        width: 1%;
+        height: 100%;
+        background-color: #4CAF50;
     }
 </style>
 <body>
 <script>
-    var resources = {scrap:{current:5,income:0,price:3},iron:{current:1,income:0,price:5}} 
+    var resources = {scrap:{current:5,income:0,price:3},iron:{current:1,income:0,price:5},money:{current:0,income:0,price:1}}; 
+    var smelting = false;
     
     function generateResourceTable(given) {
         var table = "<table>";
         for (var name in resources) {
             table += "<tr>";
             table += "<td id='" + name + "label'>" + name + ": " + resources[name].current + "</td>";
-            if (given == 1) {
+            if (given == 1 && name != "money") {
                 table += "<td>" + name + ": " + resources[name].price + "</td>";
                 table += "<td><button type='button' class='marketButton'>+</button></td>"
                 table += "<td><button type='button' class='marketButton'>-</button></td>"
@@ -81,7 +90,9 @@
 
 <div id="Resources" class="tabcontent">
     <script>generateResourceTable(0);</script>
-    <button type='button' onclick='smelt()'>Smelt</button>
+    <div id="smeltBackground" onclick='smelt()'>
+        <div id="smeltBar">SMELT</div>
+    </div>
 </div>
 
 <div id="Market" class="tabcontent">
@@ -90,7 +101,8 @@
     
 <script>
     function smelt(){
-        if (resources.scrap.current > 0) {
+        if (resources.scrap.current > 0 && !smelting) {
+            move();
             resources.scrap.current -= 1;
             resources.iron.current += 1;
             refreshResource("scrap");
@@ -118,11 +130,28 @@
 
     // Get the element with id="defaultOpen" and click on it
     document.getElementById("defaultOpen").click();
+    
+    function move() {
+        var elem = document.getElementById("smeltBar");   
+        var width = 1;
+        var id = setInterval(frame, 10);
+        smelting = true;
+        
+        function frame() {
+            if (width >= 100) {
+                smelting = false;
+                clearInterval(id);
+            } else {
+                width++;
+                elem.style.width = width + '%'; 
+            }
+        }
+    }
 </script>
 <script>
 /*First steps:
-Resource tab and market tab
-Smelt scrap into iron
+Resource tab and market tab - DONE
+Smelt scrap into iron - DONE
 sell iron and buy scrap
 fabricate iron into bulkeads and sell
 </script>
