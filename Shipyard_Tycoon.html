@@ -6,19 +6,118 @@
             padding-left: 12px;
             padding-right: 12px;
         }
+    
+    ul.tab {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        border: 1px solid #ccc;
+        background-color: #f1f1f1;
+    }
+
+    /* Float the list items side by side */
+    ul.tab li {float: left;}
+
+    /* Style the links inside the list items */
+    ul.tab li a {
+        display: inline-block;
+        color: black;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        transition: 0.3s;
+        font-size: 17px;
+    }
+
+    /* Change background color of links on hover */
+    ul.tab li a:hover {
+        background-color: #ddd;
+    }
+
+    /* Create an active/current tablink class */
+    ul.tab li a:focus, .active {
+        background-color: #ccc;
+    }
+
+    /* Style the tab content */
+    .tabcontent {
+        display: none;
+        padding: 6px 12px;
+        border: 1px solid #ccc;
+        border-top: none;
+    }
+
+    .topright {
+        float: right;
+        cursor: pointer;
+        font-size: 20px;
+    }
 </style>
 <body>
 <script>
-var resources = {scrap:{current:0,income:0},iron:{current:0,income:0}};
+    var resources = {scrap:{current:5,income:0,price:3},iron:{current:1,income:0,price:5}} 
+    
+    function generateResourceTable(given) {
+        var table = "<table>";
+        for (var name in resources) {
+            table += "<tr>";
+            table += "<td id='" + name + "label'>" + name + ": " + resources[name].current + "</td>";
+            if (given == 1) {
+                table += "<td>" + name + ": " + resources[name].price + "</td>";
+                table += "<td><button type='button' class='marketButton'>+</button></td>"
+                table += "<td><button type='button' class='marketButton'>-</button></td>"
+            }
+            table += "</tr>";
+        }
+        table += "</table>";
+        document.write(table);
+    }
+</script>    
+<ul class="tab">
+  <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Resources')" id="defaultOpen">Resources</a></li>
+  <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Market')">Market</a></li>
+</ul>    
 
-var table = "<table>";
-for (var name in resources) {
-    table += "<tr><td>";
-    table += name + ": " + resources[name].current;
-    table += "</tr></td>";
-}
-table += "</table>";
-document.write(table);
+<div id="Resources" class="tabcontent">
+    <script>generateResourceTable(0);</script>
+    <button type='button' onclick='smelt()'>Smelt</button>
+</div>
+
+<div id="Market" class="tabcontent">
+    <script>generateResourceTable(1);</script>
+</div>    
+    
+<script>
+    function smelt(){
+        if (resources.scrap.current > 0) {
+            resources.scrap.current -= 1;
+            resources.iron.current += 1;
+            refreshResource("scrap");
+            refreshResource("iron");
+        }
+    }
+    
+    function refreshResource(resource){
+        document.getElementById(resource+'label').innerHTML = resource + ": " + resources[resource].current
+    }
+    
+    function openTab(evt, tab) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(tab).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+
+    // Get the element with id="defaultOpen" and click on it
+    document.getElementById("defaultOpen").click();
 </script>
 <script>
 /*First steps:
