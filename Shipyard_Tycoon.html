@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<style>
+    td {
+            border: 1px solid black;
+            padding-left: 12px;
+            padding-right: 12px;
+        }
+</style>
+<body>
+<script>
+var resources = {scrap:{current:0,income:0},iron:{current:0,income:0}};
+
+var table = "<table>";
+for (var name in resources) {
+    table += "<tr><td>";
+    table += name + ": " + resources[name].current;
+    table += "</tr></td>";
+}
+table += "</table>";
+document.write(table);
+</script>
+<script>
+/*First steps:
+Resource tab and market tab
+Smelt scrap into iron
+sell iron and buy scrap
+fabricate iron into bulkeads and sell
+</script>
+</body>
+</html>
