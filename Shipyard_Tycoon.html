@@ -64,18 +64,19 @@
 </style>
 <body>
 <script>
-    var resources = {scrap:{current:5,income:0,price:3},iron:{current:1,income:0,price:5},money:{current:0,income:0,price:1}}; 
+    var resources = {scrap:{current:5,income:0,price:3},iron:{current:1,income:0,price:5},money:{current:10,income:0,price:1}}; 
     var smelting = false;
     
     function generateResourceTable(given) {
         var table = "<table>";
+        var x = 'a';
         for (var name in resources) {
             table += "<tr>";
             table += "<td id='" + name + "label'>" + name + ": " + resources[name].current + "</td>";
             if (given == 1 && name != "money") {
                 table += "<td>" + name + ": " + resources[name].price + "</td>";
-                table += "<td><button type='button' class='marketButton'>+</button></td>"
-                table += "<td><button type='button' class='marketButton'>-</button></td>"
+                table += "<td><button type='button' onclick='marketFunction(\"" + name + "\",0)'  class='marketButton'>+</button></td>";
+                table += "<td><button type='button' onclick='marketFunction(\"" + name + "\",1)'  class='marketButton'>-</button></td>";
             }
             table += "</tr>";
         }
@@ -111,7 +112,7 @@
     }
     
     function refreshResource(resource){
-        document.getElementById(resource+'label').innerHTML = resource + ": " + resources[resource].current
+        document.getElementById(resource+'label').innerHTML = resource + ": " + resources[resource].current;
     }
     
     function openTab(evt, tab) {
@@ -145,6 +146,15 @@
                 width++;
                 elem.style.width = width + '%'; 
             }
+        }
+    }
+    
+    function marketFunction(given,toggle) {
+        if (toggle == 0 && resources.money.current > resources[given].price) {
+            resources.money.current -= resources[given].price;
+            resources[given].current += 1;
+            refreshResource("money");
+            refreshResource("scrap");
         }
     }
 </script>
