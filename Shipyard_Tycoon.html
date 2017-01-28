@@ -64,16 +64,25 @@
 </style>
 <body>
 <script>
-    var resources = {scrap:{current:5,income:0,price:3},iron:{current:1,income:0,price:5},money:{current:10,income:0,price:1}}; 
+    var resources = {scrap:{current:3,income:0,price:3},iron:{current:0,income:0,price:5},money:{current:0,income:0,price:1}}; 
     var smelting = false;
     
-    function generateResourceTable(given) {
+    function generateResourceTable() {
         var table = "<table>";
-        var x = 'a';
         for (var name in resources) {
             table += "<tr>";
             table += "<td id='" + name + "label'>" + name + ": " + resources[name].current + "</td>";
-            if (given == 1 && name != "money") {
+            table += "</tr>";
+        }
+        table += "</table>";
+        document.write(table);
+    }
+    
+    function generateMarketTable() {
+        var table = "<table>";
+        for (var name in resources) {
+            table += "<tr>";
+            if (name != "money") {
                 table += "<td>" + name + ": " + resources[name].price + "</td>";
                 table += "<td><button type='button' onclick='marketFunction(\"" + name + "\",0)'  class='marketButton'>+</button></td>";
                 table += "<td><button type='button' onclick='marketFunction(\"" + name + "\",1)'  class='marketButton'>-</button></td>";
@@ -84,20 +93,24 @@
         document.write(table);
     }
 </script>    
+    
+<div style='float:left'>
+<script>generateResourceTable();</script>    
+</div> 
+    
 <ul class="tab">
   <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Resources')" id="defaultOpen">Resources</a></li>
   <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Market')">Market</a></li>
-</ul>    
-
-<div id="Resources" class="tabcontent">
-    <script>generateResourceTable(0);</script>
+</ul>      
+    
+<div id="Resources" class="tabcontent" style='float:left'>
     <div id="smeltBackground" onclick='smelt()'>
         <div id="smeltBar">SMELT</div>
     </div>
 </div>
 
-<div id="Market" class="tabcontent">
-    <script>generateResourceTable(1);</script>
+<div id="Market" class="tabcontent" style='float:left'>
+    <script>generateMarketTable();</script>
 </div>    
     
 <script>
@@ -150,11 +163,21 @@
     }
     
     function marketFunction(given,toggle) {
-        if (toggle == 0 && resources.money.current > resources[given].price) {
+        if (toggle == 0 && resources.money.current >= resources[given].price) {
             resources.money.current -= resources[given].price;
             resources[given].current += 1;
             refreshResource("money");
-            refreshResource("scrap");
+            refreshResource(given);
+        }
+        
+        else if (toggle == 1 && resources[given].current > 0) {
+            resources.money.current += resources[given].price;
+            resources[given].current -= 1;
+            refreshResource("money");
+            refreshResource(given);
+        }
+        else {
+            alert("Can't do that!");
         }
     }
 </script>
@@ -162,8 +185,9 @@
 /*First steps:
 Resource tab and market tab - DONE
 Smelt scrap into iron - DONE
-sell iron and buy scrap
+sell iron and buy scrap - DONE
 fabricate iron into bulkeads and sell
+do multiple smelt/fabricate simulatneously 
 </script>
 </body>
 </html>
