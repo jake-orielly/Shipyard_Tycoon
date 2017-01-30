@@ -64,14 +64,14 @@
 </style>
 <body>
 <script>
-    var resources = {scrap:{current:3,income:0,price:3},iron:{current:0,income:0,price:5},money:{current:0,income:0,price:1}}; 
+    var resources = {scrap:{current:3,income:0,price:3,name:"Scrap"},iron:{current:3,income:0,price:5,name:"Iron"},money:{current:0,income:0,price:1,name:"Money"},tinyBulkhead:{name:"Tiny Bulkhead",ingredients:{iron:3},price:23,current:0}}; 
     var smelting = false;
-    
+    var resourceMaster = {scrap:resources.scrap, iron:resources.iron, money:resources.scrap,tinyBulkhead:resources.tinyBulkhead};
     function generateResourceTable() {
         var table = "<table>";
         for (var name in resources) {
             table += "<tr>";
-            table += "<td id='" + name + "label'>" + name + ": " + resources[name].current + "</td>";
+            table += "<td id='" + name + "label'>" + resources[name].name + ": " + resources[name].current + "</td>";
             table += "</tr>";
         }
         table += "</table>";
@@ -83,7 +83,7 @@
         for (var name in resources) {
             table += "<tr>";
             if (name != "money") {
-                table += "<td>" + name + ": " + resources[name].price + "</td>";
+                table += "<td>" + resources[name].name + ": " + resources[name].price + "</td>";
                 table += "<td><button type='button' onclick='marketFunction(\"" + name + "\",0)'  class='marketButton'>+</button></td>";
                 table += "<td><button type='button' onclick='marketFunction(\"" + name + "\",1)'  class='marketButton'>-</button></td>";
             }
@@ -99,13 +99,27 @@
 </div> 
     
 <ul class="tab">
-  <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Resources')" id="defaultOpen">Resources</a></li>
+  <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Shipyard')" id="defaultOpen">Shipyard</a></li>
   <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Market')">Market</a></li>
 </ul>      
     
-<div id="Resources" class="tabcontent" style='float:left'>
+<div id="Shipyard" class="tabcontent" style='float:left'>
     <div id="smeltBackground" onclick='smelt()'>
         <div id="smeltBar">SMELT</div>
+    </div>
+    <div style='margin-top:10px'><u> Fabrication </u>
+        <script>
+            var table = "<table>";
+            for (var name in resources) {
+                if (resources[name].ingredients) {
+                    table += "<tr>";
+                    table += "<td onclick='fabricateItem(\"tinyBulkhead\")'>" + resources[name].name +"</td>";
+                    table += "</tr>";   
+                }
+            }
+            table += "</table>";
+            document.write(table);
+        </script>
     </div>
 </div>
 
@@ -125,7 +139,7 @@
     }
     
     function refreshResource(resource){
-        document.getElementById(resource+'label').innerHTML = resource + ": " + resources[resource].current;
+        document.getElementById(resource+'label').innerHTML = resources[resource].name + ": " + resources[resource].current;
     }
     
     function openTab(evt, tab) {
@@ -162,6 +176,37 @@
         }
     }
     
+    function fabricateItem(given) {
+        takeIngredients(given.ingredients);
+        resources[given].current += 1;
+        refreshResource(given);
+    }
+    
+    function takeIngredients(given) {
+        var sufficient = true;
+
+        for(var name in given) {
+            var value = given[name];
+            if (name != "scaling" && given[name] > resources[name].current) {
+                sufficient = false;
+            }
+        }
+
+        if (sufficient) {
+            for(var name in given) {
+                var value = given[name];
+                resources[name].current -= given[name];
+                refreshResource(name);
+            }   
+        }
+
+        else {
+            alert("Too Poor!");
+        }
+
+        return sufficient;
+    }
+    
     function marketFunction(given,toggle) {
         if (toggle == 0 && resources.money.current >= resources[given].price) {
             resources.money.current -= resources[given].price;
@@ -188,6 +233,11 @@ Smelt scrap into iron - DONE
 sell iron and buy scrap - DONE
 fabricate iron into bulkeads and sell
 do multiple smelt/fabricate simulatneously 
+
+Problems:
+Smelt bar doesn't start full
+Can't see price well
+Alert when not enough money to buy is bad
 </script>
 </body>
 </html>
