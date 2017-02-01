@@ -101,6 +101,7 @@
 <ul class="tab">
   <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Shipyard')" id="defaultOpen">Shipyard</a></li>
   <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Market')">Market</a></li>
+  <li><a href="javascript:void(0)" class="tablinks" onclick="openTab(event, 'Upgrades')">Upgrades</a></li>
 </ul>      
     
 <div id="Shipyard" class="tabcontent" style='float:left'>
@@ -125,7 +126,11 @@
 
 <div id="Market" class="tabcontent" style='float:left'>
     <script>generateMarketTable();</script>
-</div>    
+</div>
+
+<div id="Upgrades" class="tabcontent" style='float:left'>
+    <u>Upgrades</u>
+</div>     
     
 <script>
     function smelt(){
@@ -177,7 +182,7 @@
     }
     
     function fabricateItem(given) {
-        takeIngredients(given.ingredients);
+        takeIngredients(resources[given].ingredients);
         resources[given].current += 1;
         refreshResource(given);
     }
