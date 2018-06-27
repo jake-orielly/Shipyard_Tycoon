@@ -8,7 +8,15 @@ function iron_ore(amount = 1) {
 
 function iron_plate(amount = 1) {
     return new Item ('iron_plate',5,null,amount);
+}
+
+function copper_ore(amount = 1) {
+    return new Item ('copper_ore',6,null,amount);
 } 
+
+function copper_plate(amount = 1) {
+    return new Item ('copper_plate',11,null,amount);
+}
 
 function Item(name,value,craftable,amount = 1) {
     this.name = name;

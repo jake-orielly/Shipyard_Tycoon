@@ -1,6 +1,6 @@
-var inventory = [iron_ore(4)];
+var inventory = [iron_ore(4),copper_ore(4)];
 
-var smeltable = {iron_ore:iron_plate};
+var smeltable = {iron_ore:iron_plate,copper_ore:copper_plate};
 
 updateInventory();
 updateWorkshop();
