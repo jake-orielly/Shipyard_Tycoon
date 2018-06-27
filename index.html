@@ -6,15 +6,16 @@
 </head>
 <body>
     <h1>Shipyard Tycoon</h1>
-    <table>
-        <tr>
-            <td onclick='updateWorkshop()'>Workshop</td>
-            <td onclick='updateStore()'>Market</td>
-        </tr>
-    </table>
-    <table id='inventoryTable'></table>
-    <table id='actionTable'>
-    </table>
+    <div style="display:inline-block">
+        <ul>
+            <li onclick='updateWorkshop()'>Workshop</li>
+            <li onclick='updateStore()'>Market</li>
+        </ul>
+    </div>
+    <div>
+        <table id='inventoryTable'></table>
+        <table id='actionTable'></table>
+    </div>
     <script src='js/utilityFunctions.js'></script>
     <script src='js/items.js'></script>
     <script src='js/main.js'></script>

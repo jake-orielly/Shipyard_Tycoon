@@ -18,6 +18,8 @@ function copper_plate(amount = 1) {
     return new Item ('copper_plate',11,null,amount);
 }
 
+var shopItems = [iron_ore,copper_ore,iron_plate,copper_plate];
+
 function Item(name,value,craftable,amount = 1) {
     this.name = name;
     this.value = value;
@@ -57,8 +59,6 @@ function removeItem (source,item,amount = 1) {
             if (item().name == source[i].name) {
                 source[i].amount -= amount;
                 amount = 0;
-                if (source[i].amount == 0)
-                    source.splice(i,1);
                 break;
             }
         }

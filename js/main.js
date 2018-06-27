@@ -40,10 +40,10 @@ function updateWorkshop() {
 
 function updateStore() {
     var curr = "";
-    for (var i = 0; i < inventory.length; i++) {
+    for (var i = 0; i < shopItems.length; i++) {
         curr += "<tr>";
-        curr += "<td onclick='buy(" + inventory[i].name + ")'>Buy</td>";
-        curr += "<td onclick='sell(" + inventory[i].name + ")'>Sell</td>";
+        curr += "<td onclick='buy(" + shopItems[i].name + ")'>Buy</td>";
+        curr += "<td onclick='sell(" + shopItems[i].name + ")'>Sell</td>";
         curr += "</tr>";
     }
     $("#actionTable").html(curr);
