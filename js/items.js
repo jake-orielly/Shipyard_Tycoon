@@ -1,6 +1,4 @@
-function credits(amount = 1) {
-    return new Item ('credits',1,null,amount);
-}
+var credits = 0;
 
 function iron_ore(amount = 1) {
     return new Item ('iron_ore',3,null,amount);
@@ -64,16 +62,15 @@ function removeItem (source,item,amount = 1) {
 }
 
 function buy(given,amount = 1) {
-    var playerCredits = inventoryCount(inventory,credits);
-    if(playerCredits >= given().value*amount) {
+    if(credits >= given().value*amount) {
         addItem(inventory,given,amount);
-        removeItem(inventory,credits,given().value*amount);
+        credits -= given().value*amount;
     }   
 }
 
 function sell(given,amount = 1) {
-    if(given().name != "credits" && inventoryCount(inventory,given) >= amount) {
-        addItem(inventory,credits,given().value * amount);
+    if(inventoryCount(inventory,given) >= amount) {
+        credits += given().value * amount;
         removeItem(inventory,given,amount);
     }   
 }

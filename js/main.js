@@ -9,11 +9,14 @@ var ticks = 0;
 
 makeInventory();
 makeWorkshop();
-setInterval(tick, 50);
+setInterval(tick, 20);
 
 function tick() {
-    mine();
-    runSmelters();
+    if (ticks % 10 == 0)
+        mine();
+    else if (ticks % 10 == 5)
+        runSmelters();
+    updateCredits();
     updateInventory();
     ticks++;
 }
@@ -33,6 +36,10 @@ function runSmelters() {
 
 function buyMiner() {
     miners.iron_ore++;
+}
+
+function buySmelter() {
+    smelters.iron_ore++;
 }
 
 function smelt(item, amount=1) {
@@ -67,6 +74,9 @@ function updateInventory() {
         $("#inventoryTable>tr").find(".amount")[i].innerHTML = Math.round(inventory[i].amount * 100) / 100;
 }
 
+function updateCredits() {
+    $("#credits").html("Credits: " + credits);
+}
 
 function makeWorkshop() {
     var curr = "";
