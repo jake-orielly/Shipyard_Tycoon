@@ -18,7 +18,7 @@ function copper_plate(amount = 1) {
     return new Item ('copper_plate',11,null,amount);
 }
 
-var shopItems = [iron_ore,copper_ore,iron_plate,copper_plate];
+var allItems = [iron_ore,copper_ore,iron_plate,copper_plate];
 
 function Item(name,value,craftable,amount = 1) {
     this.name = name;
@@ -37,18 +37,16 @@ function Item(name,value,craftable,amount = 1) {
 }
 
 function addItem (source,item,amount = 1) {
-    console.log(amount);
     var newAmount;
     for (var i = 0; i < source.length; i++) {
         if (item().name == source[i].name) {
             newAmount = source[i].amount + amount;
             source[i] = item(newAmount);
-            updateInventory();
             return;
         }
     }
     source.push(item(amount));
-    updateInventory();
+    $("#inventoryTable>tr:contains(" + item().getName() + ")>td").removeClass("invis")
 }
 
 function removeItem (source,item,amount = 1) {
@@ -62,7 +60,6 @@ function removeItem (source,item,amount = 1) {
                 break;
             }
         }
-        updateInventory();
     }
 }
 
@@ -71,7 +68,6 @@ function buy(given,amount = 1) {
     if(playerCredits >= given().value*amount) {
         addItem(inventory,given,amount);
         removeItem(inventory,credits,given().value*amount);
-        updateInventory();
     }   
 }
 
@@ -79,7 +75,6 @@ function sell(given,amount = 1) {
     if(given().name != "credits" && inventoryCount(inventory,given) >= amount) {
         addItem(inventory,credits,given().value * amount);
         removeItem(inventory,given,amount);
-        updateInventory();
     }   
 }
 

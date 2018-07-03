@@ -3,47 +3,72 @@ var inventory = [iron_ore(4),copper_ore(4)];
 var smeltable = {iron_ore:iron_plate,copper_ore:copper_plate};
 
 var miners = {iron_ore:0};
+var smelters = {iron_ore:0};
 
-updateInventory();
-updateWorkshop();
-setInterval(tick, 200);
+var ticks = 0;
+
+makeInventory();
+makeWorkshop();
+setInterval(tick, 50);
 
 function tick() {
     mine();
+    runSmelters();
+    updateInventory();
+    ticks++;
 }
 
 function mine() {
     for (var i in miners)
-        addItem(inventory,window[i],miners[i]*0.01);
+        if (miners[i])
+            addItem(inventory,window[i],miners[i]*0.01);
+}
+
+function runSmelters() {
+    for (var i in smelters)
+        if (smelters[i])
+            smelt(window[i],smelters[i]*0.01);
+        
 }
 
 function buyMiner() {
     miners.iron_ore++;
 }
 
-function smelt(item) {
-    if (inventoryCount(inventory,item)) {
-        removeItem(inventory,item);
-        addItem(inventory,smeltable[item.name]);
-        updateWorkshop()
+function smelt(item, amount=1) {
+    if (inventoryCount(inventory,item) >= amount) {
+        removeItem(inventory,item,amount);
+        addItem(inventory,smeltable[item.name],amount);
     }
     else
         console.log ("Nothing to smelt.")
 }
 
-function updateInventory() {
+function makeInventory() {
     var curr = "";
-    for (var i = 0; i < inventory.length; i++) {
+    for (var i = 0; i < allItems.length; i++) {
         curr += "<tr>";
-        curr += "<td>" + inventory[i].getName() + "</td>";
-        curr += "<td class='amount'>" + Math.round(inventory[i].amount * 100) / 100 + "</td>";
+        if (inventory[i]) {
+            curr += "<td>" + allItems[i]().getName() + "</td>";
+            curr += "<td class='amount'>" + Math.round(inventory[i].amount * 100) / 100 + "</td>";
+        }
+        else {
+            curr += "<td class='invis'>" + allItems[i]().getName() + "</td>";
+            curr += "<td class='amount invis'>0</td>";
+        }
         curr += "</tr>";
     }
     
     $("#inventoryTable").html(curr);
 }
 
-function updateWorkshop() {
+function updateInventory() {
+    for (var i = 0; i <  inventory.length; i++)
+        $("#inventoryTable>tr").find(".amount")[i].innerHTML = Math.round(inventory[i].amount * 100) / 100;
+}
+
+
+function makeWorkshop() {
     var curr = "";
     for (var i = 0; i < inventory.length; i++) {
         curr += "<tr>";
@@ -54,12 +79,12 @@ function updateWorkshop() {
     $("#actionTable").html(curr);
 }
 
-function updateStore() {
+function makeStore() {
     var curr = "";
-    for (var i = 0; i < shopItems.length; i++) {
+    for (var i = 0; i < allItems.length; i++) {
         curr += "<tr>";
-        curr += "<td onclick='buy(" + shopItems[i].name + ")'>Buy</td>";
-        curr += "<td onclick='sell(" + shopItems[i].name + ")'>Sell</td>";
+        curr += "<td onclick='buy(" + allItems[i].name + ")'>Buy</td>";
+        curr += "<td onclick='sell(" + allItems[i].name + ")'>Sell</td>";
         curr += "</tr>";
     }
     $("#actionTable").html(curr);

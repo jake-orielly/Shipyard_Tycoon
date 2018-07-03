@@ -14,3 +14,7 @@ table {
 .amount {
     width: 2em;
 }
+
+.invis {
+    display:none;
+}
