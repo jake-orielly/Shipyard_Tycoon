@@ -2,8 +2,24 @@ var inventory = [iron_ore(4),copper_ore(4)];
 
 var smeltable = {iron_ore:iron_plate,copper_ore:copper_plate};
 
+var miners = {iron_ore:0};
+
 updateInventory();
 updateWorkshop();
+setInterval(tick, 200);
+
+function tick() {
+    mine();
+}
+
+function mine() {
+    for (var i in miners)
+        addItem(inventory,window[i],miners[i]*0.01);
+}
+
+function buyMiner() {
+    miners.iron_ore++;
+}
 
 function smelt(item) {
     if (inventoryCount(inventory,item)) {
@@ -20,7 +36,7 @@ function updateInventory() {
     for (var i = 0; i < inventory.length; i++) {
         curr += "<tr>";
         curr += "<td>" + inventory[i].getName() + "</td>";
-        curr += "<td>" + inventory[i].amount + "</td>";
+        curr += "<td class='amount'>" + Math.round(inventory[i].amount * 100) / 100 + "</td>";
         curr += "</tr>";
     }
     

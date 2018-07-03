@@ -10,3 +10,7 @@ li {
 table {
     float:left;
 }
+
+.amount {
+    width: 2em;
+}
