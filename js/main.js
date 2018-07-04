@@ -54,14 +54,16 @@ function smelt(item, amount=1) {
 function makeInventory() {
     var curr = "";
     for (var i = 0; i < allItems.length; i++) {
-        curr += "<tr>";
+        curr += "<tr id='" + allItems[i]().name + "'>";
         if (inventory[i]) {
-            curr += "<td>" + allItems[i]().getName() + "</td>";
+            curr += "<td>" + allItems[i]().getName() + ":</td>";
             curr += "<td class='amount'>" + Math.round(inventory[i].amount * 100) / 100 + "</td>";
+            curr += "<td>/" + inventory[i].max + "</td>";
         }
         else {
             curr += "<td class='invis'>" + allItems[i]().getName() + "</td>";
             curr += "<td class='amount invis'>0</td>";
+            curr += "<td>" + allItems[i]().max + "</td>";
         }
         curr += "</tr>";
     }
@@ -71,7 +73,7 @@ function makeInventory() {
 
 function updateInventory() {
     for (var i = 0; i <  inventory.length; i++)
-        $("#inventoryTable>tr").find(".amount")[i].innerHTML = Math.round(inventory[i].amount * 100) / 100;
+        $("#"+inventory[i].name).find(".amount").html(Math.round(inventory[i].amount * 100) / 100);
 }
 
 function updateCredits() {
@@ -83,7 +85,7 @@ function makeWorkshop() {
     for (var i = 0; i < inventory.length; i++) {
         curr += "<tr>";
         if (smeltable[inventory[i].name])
-            curr += "<td onclick='smelt(" + inventory[i].name + ")'>Smelt</td>";
+            curr += "<td class='pointer' onclick='smelt(" + inventory[i].name + ")'>Smelt</td>";
         curr += "</tr>";
     }
     $("#actionTable").html(curr);
@@ -93,8 +95,8 @@ function makeStore() {
     var curr = "";
     for (var i = 0; i < allItems.length; i++) {
         curr += "<tr>";
-        curr += "<td onclick='buy(" + allItems[i].name + ")'>Buy</td>";
-        curr += "<td onclick='sell(" + allItems[i].name + ")'>Sell</td>";
+        curr += "<td class='pointer' onclick='buy(" + allItems[i].name + ")'>Buy</td>";
+        curr += "<td class='pointer' onclick='sell(" + allItems[i].name + ")'>Sell</td>";
         curr += "</tr>";
     }
     $("#actionTable").html(curr);

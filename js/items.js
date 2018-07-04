@@ -23,6 +23,7 @@ function Item(name,value,craftable,amount = 1) {
     this.value = value;
     this.amount = amount;
     this.craftable = craftable;
+    this.max = 5000;
     
     this.getName = function() {
         var result = name;
